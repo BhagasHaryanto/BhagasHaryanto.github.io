@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Instagram Feed</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    /* Custom CSS untuk feed Instagram */
+    .instagram-feed {
+      margin-top: 20px;
+    }
+    .instagram-item {
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1 class="text-center">Instagram Feed</h1>
+  <div class="row instagram-feed" id="instagramFeed">
+    <!-- Instagram posts will be inserted here -->
+  </div>
+</div>
+
+<!-- Bootstrap JS dan jQuery (dibutuhkan untuk AJAX) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+  $(document).ready(function(){
+    // Function to fetch Instagram posts
+    function fetchInstagramPosts() {
+      // Replace 'ACCESS_TOKEN' with your own Instagram Access Token
+      var accessToken = 'IGQWRQRnI2dlZAmTDhCSTk0THRZAbmhtb2E1aEsydVZAnbGt2RzlBY3h6ZA19pNUZAkLW5udFZAVQTFiUUl3MVBqZA2VpUlYyYzdRZAjk0TFgxUFFYQVB3dXZAEeVVLR090SkFKdHNqWHRDTXJsQ3RyNTRHOGxOQnRpcUlxMnMZD';
+
+      // Replace 'USER_ID' with the Instagram User ID you want to fetch posts from
+      var userId = '53864528698';
+
+      // Make AJAX request to Instagram Basic Display API
+      $.ajax({
+        url: 'https://graph.instagram.com/' + userId + '/media?fields=id,caption,media_url,permalink,timestamp&access_token=' + accessToken,
+        type: 'GET',
+        dataType: 'json',
+        success: function(data) {
+          // Clear existing feed
+          $('#instagramFeed').empty();
+
+          // Iterate through each post and append to feed
+          data.data.forEach(function(post) {
+            var html = '<div class="col-md-4"><div class="instagram-item"><a href="' + post.permalink + '" target="_blank"><img src="' + post.media_url + '" class="img-fluid" alt="Instagram Post"></a><p>' + post.caption + '</p></div></div>';
+            $('#instagramFeed').append(html);
+          });
+        },
+        error: function(xhr, status, error) {
+          console.error('Error fetching Instagram posts:', error);
+        }
+      });
+    }
+
+    // Initial fetch of Instagram posts
+    fetchInstagramPosts();
+
+    // Automatically update feed every 5 minutes (300,000 milliseconds)
+    setInterval(fetchInstagramPosts, 300000);
+  });
+</script>
+
+</body>
+</html>
